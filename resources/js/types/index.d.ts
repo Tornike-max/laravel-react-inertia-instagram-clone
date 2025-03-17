@@ -30,6 +30,18 @@ export interface SharedData {
     [key: string]: unknown;
 }
 
+export interface Post{
+    id: number;
+    title: string;
+    content: string;
+    user_id: number;
+    slug: string;
+    image: string;
+    published_at: string;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface User {
     id: number;
     name: string;
