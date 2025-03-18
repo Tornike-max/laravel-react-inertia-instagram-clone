@@ -19,7 +19,7 @@ class PostFactory extends Factory
         return [
             'title'=>$this->faker->sentence,
             'content'=>$this->faker->paragraph,
-            'image'=>$this->faker->imageUrl(),
+            'image'=> fake()->imageUrl(),
             'slug'=>$this->faker->slug,
             'published'=>$this->faker->boolean,
             'published_at'=>$this->faker->dateTime,
