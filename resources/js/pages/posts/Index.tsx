@@ -6,6 +6,9 @@ import { Head, usePage } from '@inertiajs/react';
 import { CiSignpostDuo1 } from 'react-icons/ci';
 import { AiOutlineLike } from "react-icons/ai";
 import { LiaUserFriendsSolid } from "react-icons/lia";
+import { useState } from 'react';
+import ModalComponent from '@/components/modal';
+
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -14,8 +17,13 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+
+
 export default function Index({posts}:{posts:Post[]}) {
     const { auth } = usePage<SharedData>().props;
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
     
 
     console.log(posts,auth)
@@ -53,6 +61,17 @@ export default function Index({posts}:{posts:Post[]}) {
                     <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
                     }                   
                      </div>
+                </div>
+                <div className='w-full flex justify-start items-center gap-4'>
+                    <button className='py-2 px-3 border-b hover:border-indigo-500 duration-200 transition-all cursor-pointer'>Create Post</button>
+                    <button className='py-2 px-3 border-b hover:border-indigo-500 duration-200 transition-all cursor-pointer'>Photos</button>
+                    <button className='py-2 px-3 border-b hover:border-indigo-500 duration-200 transition-all cursor-pointer'>About</button>
+                </div>
+                <div className='w-full flex justify-center items-center'>
+                    <button onClick={handleOpen} className='py-2 px-3 border border-neutral-200 dark:border-neutral-700 rounded-xl w-full flex justify-start items-center text-neutral-500 cursor-pointer hover:border-neutral-200 dark:hover:border-neutral-600 duration-200 transition-all'>
+                        <span>What's on your mind?</span>
+                    </button>
+                    <ModalComponent open={open} handleClose={handleClose} />
                 </div>
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border md:min-h-min">
                 {posts.length > 0 
