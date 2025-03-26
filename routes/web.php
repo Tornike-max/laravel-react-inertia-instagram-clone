@@ -11,6 +11,9 @@ Route::get('/', function () {
 
 Route::get("/dashboard",[MainController::class,'index'])->name('dashboard');
 Route::get("/posts",[PostController::class,'index'])->name('posts');
+Route::post("/post/store",[PostController::class,'store'])->name('post.store');
+Route::get("/post/show/{post}",[PostController::class,'show'])->name('post.show');
+
 
 
 require __DIR__.'/settings.php';

@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import { Avatar } from '@mui/material';
+import { useForm } from '@inertiajs/react';
 
 const style = {
     position: 'absolute',
@@ -20,6 +21,14 @@ const style = {
 
 
 const ModalComponent = ({open,handleClose}:{open:boolean,handleClose:()=>void}) => {
+    const {post,processing,data,errors,setData} = useForm({
+        content:"",
+        title:''
+    });
+
+    const onSubmit = ()=>{
+        post(route('posts.store'));
+    }
     return (
         <Modal
             aria-labelledby="transition-modal-title"
@@ -46,9 +55,11 @@ const ModalComponent = ({open,handleClose}:{open:boolean,handleClose:()=>void}) 
                                 </button>
                             </div>
                         </div>
-                        <form className='w-full flex justify-center items-center flex-col gap-4'>
-                            <textarea className='w-full text-white p-2' placeholder="What's on your mind?"></textarea>
-                            <button className='w-full py-2 px-3 rounded-lg bg-blue-500 text-slate-200 hover:text-slate-100'>Post</button>
+                        <form onSubmit={onSubmit} className='w-full flex justify-center items-center flex-col gap-4'>
+                            <input value={data.title} onChange={(e)=>setData('title',e.target.value)} className='w-full text-white p-2' placeholder="What's on your mind?" />
+                            <textarea onChange={(e)=>setData('content',e.target.value)} className='w-full text-white p-2' placeholder="What's on your mind?">{data.content}</textarea>
+                            {errors.content && <span className='text-red-500'>{errors.content}</span>}
+                            <button disabled={processing} className='w-full py-2 px-3 rounded-lg bg-blue-500 text-slate-200 hover:text-slate-100'>{processing ? 'Processing' : 'Post'}</button>
                         </form>
                     </div>
                 </Box>
