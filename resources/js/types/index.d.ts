@@ -35,6 +35,7 @@ export interface Post{
     title: string;
     content: string;
     user_id: number;
+    user:User;
     slug: string;
     image: string;
     published_at: string;

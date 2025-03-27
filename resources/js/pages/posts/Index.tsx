@@ -74,25 +74,73 @@ export default function Index({posts}:{posts:Post[]}) {
                     <ModalComponent open={open} handleClose={handleClose} />
                 </div>
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border md:min-h-min">
-                {posts.length > 0 
-                ? 
-                    <div className="grid grid-cols-1 gap-4 p-4">
-                        {posts.map((post) => (
-                            <Link href={route('post.show',post.id)} key={post.id} className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
-                                <div className="p-4 w-full h-full flex flex-col gap-4">
-                                    <div className='w-full flex justify-end items-center'>
-                                        <span className='text-slate-300 text-sm'>{post.published_at}</span>
+                    {posts.length > 0 ? (
+                        <div className="grid grid-cols-1 gap-6 p-4 md:gap-8"> {/* Increased gap */}
+                            {posts.map((post) => (
+                                <div 
+                                    key={post.id} 
+                                    className="bg-white dark:bg-neutral-900 rounded-xl shadow-md overflow-hidden transition-all hover:shadow-lg" 
+                                >
+                                    {/* Post Header */}
+                                    <div className="flex items-center p-4 border-b border-neutral-100 dark:border-neutral-800"> 
+                                        <img 
+                                            src={auth.user.avatar} 
+                                            alt={post.user.name}
+                                            className="w-10 h-10 rounded-full mr-3 border-2 border-indigo-500" 
+                                        />
+                                        <div>
+                                            <div className="font-semibold text-gray-900 dark:text-neutral-100">
+                                                {post.user.name}
+                                            </div>
+                                            <div className="text-xs text-gray-500 dark:text-neutral-400">
+                                                {new Date(post.created_at).toLocaleString()}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <img className='w-full flex justify-center items-center object-cover h-full' src={post.image} alt='Image'/>
-                                    <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100">{post.title}</h2>
-                                    <p className="text-neutral-500 dark:text-neutral-400">{post.content}</p>
+
+                                    <div className="p-4">
+                                        <p className="text-gray-800 dark:text-neutral-200 mb-4 whitespace-pre-line">
+                                            {post.content}
+                                        </p>
+                                    </div>
+
+                                    {post.image && (
+                                        <div className="border-y border-neutral-100 dark:border-neutral-800">
+                                            <img 
+                                                src={post.image} 
+                                                alt={post.title}
+                                                className="w-full max-h-[600px] object-cover" 
+                                            />
+                                        </div>
+                                    )}
+
+                                    {/* Post Stats */}
+                                    <div className="px-4 py-2 border-t border-neutral-100 dark:border-neutral-800 text-sm text-gray-500 dark:text-neutral-400">
+                                        <div className="flex items-center gap-6">
+                                            <span>10 likes</span>
+                                            <span>5 comments</span>
+                                            <span>2 shares</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Action Buttons */}
+                                    <div className="flex border-t border-neutral-100 dark:border-neutral-800 text-gray-500 dark:text-neutral-400 text-sm font-medium divide-x divide-neutral-100 dark:divide-neutral-800"> {/* Added dividers */}
+                                        <button className="flex-1 flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
+                                            {/* Like button content */}
+                                        </button>
+                                        <button className="flex-1 flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
+                                            {/* Comment button content */}
+                                        </button>
+                                        <button className="flex-1 flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
+                                            {/* Share button content */}
+                                        </button>
+                                    </div>
                                 </div>
-                            </Link>
-                        ))} 
+                            ))}
                         </div>
-               : 
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                }
+                    ) : (
+                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+                    )}
                 </div>
             </div>
         </AppLayout>
