@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Post, SharedData, type BreadcrumbItem } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { CiSignpostDuo1 } from 'react-icons/ci';
-import { AiOutlineLike } from "react-icons/ai";
+import { AiOutlineComment, AiOutlineLike, AiOutlineShareAlt } from "react-icons/ai";
 import { LiaUserFriendsSolid } from "react-icons/lia";
 import { useState } from 'react';
 import ModalComponent from '@/components/modal';
@@ -77,14 +77,14 @@ export default function Index({posts}:{posts:Post[]}) {
                     {posts.length > 0 ? (
                         <div className="grid grid-cols-1 gap-6 p-4 md:gap-8"> {/* Increased gap */}
                             {posts.map((post) => (
-                                <div 
+                                <Link href={route('post.show', post.id)}
                                     key={post.id} 
                                     className="bg-white dark:bg-neutral-900 rounded-xl shadow-md overflow-hidden transition-all hover:shadow-lg" 
                                 >
                                     {/* Post Header */}
                                     <div className="flex items-center p-4 border-b border-neutral-100 dark:border-neutral-800"> 
                                         <img 
-                                            src={auth.user.avatar} 
+                                            src={"https://tailwindcss.com/plus-assets/img/ecommerce-images/product-quick-preview-02-detail.jpg"} 
                                             alt={post.user.name}
                                             className="w-10 h-10 rounded-full mr-3 border-2 border-indigo-500" 
                                         />
@@ -107,7 +107,7 @@ export default function Index({posts}:{posts:Post[]}) {
                                     {post.image && (
                                         <div className="border-y border-neutral-100 dark:border-neutral-800">
                                             <img 
-                                                src={post.image} 
+                                                src={"https://tailwindcss.com/plus-assets/img/ecommerce-images/product-quick-preview-02-detail.jpg"} 
                                                 alt={post.title}
                                                 className="w-full max-h-[600px] object-cover" 
                                             />
@@ -125,17 +125,17 @@ export default function Index({posts}:{posts:Post[]}) {
 
                                     {/* Action Buttons */}
                                     <div className="flex border-t border-neutral-100 dark:border-neutral-800 text-gray-500 dark:text-neutral-400 text-sm font-medium divide-x divide-neutral-100 dark:divide-neutral-800"> {/* Added dividers */}
-                                        <button className="flex-1 flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
-                                            {/* Like button content */}
+                                        <button type='button' className="flex-1 flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
+                                            <AiOutlineLike className="mr-2" /> Like
                                         </button>
-                                        <button className="flex-1 flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
-                                            {/* Comment button content */}
+                                        <button type='button' className="flex-1 flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
+                                            <AiOutlineComment className="mr-2" /> Comment
                                         </button>
-                                        <button className="flex-1 flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
-                                            {/* Share button content */}
+                                        <button type='button' className="flex-1 flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
+                                            <AiOutlineShareAlt className="mr-2" /> Share
                                         </button>
                                     </div>
-                                </div>
+                                </Link>
                             ))}
                         </div>
                     ) : (
