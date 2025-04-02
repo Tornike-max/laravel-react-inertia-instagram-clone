@@ -42,9 +42,45 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $postData = Post::query()->with('user')->where('id','=',$post->id)->first();
-
+        $isLiked = $this->isLiked($post);
+        $likesCount = $post->likes()->count();
+        
         return inertia("posts/Show",[
-            'post'=>$postData
+            'post'=>$postData,
+            "isLiked"=>$isLiked,
+            "likesCount"=>$likesCount
         ]);
+    }
+
+    public function like(Post $post)
+    {
+        $user = Auth::user();
+
+       
+        if (!$user->likes()->where('post_id', $post->id)->exists()) {
+            $user->likes()->attach($post->id);
+        }
+    }
+
+    /**
+     * პოსტის მოწონების მოხსნა.
+     */
+    public function unlike(Post $post)
+    {
+        $user = Auth::user();
+
+        if ($user->likes()->where('post_id', $post->id)->exists()) {
+            $user->likes()->detach($post->id);
+        }
+    }
+
+    /**
+     * ამოწმებს, მოწონებული აქვს თუ არა მომხმარებელს პოსტი.
+     */
+    public function isLiked(Post $post)
+    {
+        $isLiked = Auth::user()->likes()->where('post_id', $post->id)->exists();
+        
+        return $isLiked;
     }
 }

@@ -14,6 +14,9 @@ Route::get("/posts",[PostController::class,'index'])->name('posts');
 Route::post("/post/store",[PostController::class,'store'])->name('post.store');
 Route::get("/post/show/{post}",[PostController::class,'show'])->name('post.show');
 
+Route::post('/posts/{post}/like', [PostController::class, 'like'])->name("post.like");
+Route::post('/posts/{post}/unlike', [PostController::class, 'unlike'])->name("post.unlike");
+Route::get('/posts/{post}/is-liked', [PostController::class, 'isLiked'])->name("post.isLiked");
 
 
 require __DIR__.'/settings.php';

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
@@ -20,21 +19,29 @@ class Post extends Model
         'published_at',
         'user_id',
     ];
+
     protected $hidden = [
         'user_id',
     ];
-    protected function casts(): array
-    {
-        return [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
-    }
 
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
+    /**
+     * პოსტის ავტორი.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-    
 
+    /**
+     * პოსტის მოწონებები.
+     */
+    public function likes()
+    {
+        return $this->belongsToMany(User::class, 'like_post')->withTimestamps();
+    }
 }
