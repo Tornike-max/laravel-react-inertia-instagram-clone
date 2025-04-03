@@ -43,6 +43,18 @@ export interface Post{
     updated_at: string;
 }
 
+export interface Comment {
+    id: number;
+    comment: string;
+    created_at: string;
+    updated_at: string;
+    post_id: number;
+    user_id: number;
+    // Relationships
+    post?: Post;
+    user?: User;
+  }
+
 export interface User {
     id: number;
     name: string;

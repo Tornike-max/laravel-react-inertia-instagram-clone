@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Posts;
 
 use App\Http\Controllers\Controller;
+use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,11 +45,12 @@ class PostController extends Controller
         $postData = Post::query()->with('user')->where('id','=',$post->id)->first();
         $isLiked = $this->isLiked($post);
         $likesCount = $post->likes()->count();
-        
+        $comments = Comment::query()->with("post")->where('post_id','=',$post->id)->orderBy('created_at','desc')->get();
         return inertia("posts/Show",[
             'post'=>$postData,
             "isLiked"=>$isLiked,
-            "likesCount"=>$likesCount
+            "likesCount"=>$likesCount,
+            "comments"=>$comments
         ]);
     }
 
@@ -82,5 +84,20 @@ class PostController extends Controller
         $isLiked = Auth::user()->likes()->where('post_id', $post->id)->exists();
         
         return $isLiked;
+    }
+
+    public function comment(Request $request, Post $post)
+    {
+        $data = $request->validate([
+            'comment'=>'required|min:3|max:500'
+        ]);
+
+        Comment::create([
+            'user_id'=>Auth::user()->id,
+            "post_id"=>$post->id,
+            'comment'=>$data['comment']
+        ]);
+
+        return redirect()->back();
     }
 }
