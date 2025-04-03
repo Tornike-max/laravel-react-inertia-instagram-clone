@@ -45,7 +45,7 @@ class PostController extends Controller
         $postData = Post::query()->with('user')->where('id','=',$post->id)->first();
         $isLiked = $this->isLiked($post);
         $likesCount = $post->likes()->count();
-        $comments = Comment::query()->with("post")->where('post_id','=',$post->id)->orderBy('created_at','desc')->get();
+        $comments = Comment::query()->with("post",'user')->where('post_id','=',$post->id)->orderBy('created_at','desc')->get();
         return inertia("posts/Show",[
             'post'=>$postData,
             "isLiked"=>$isLiked,

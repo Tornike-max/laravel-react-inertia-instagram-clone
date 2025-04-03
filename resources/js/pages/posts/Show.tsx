@@ -1,5 +1,5 @@
 import AppLayout from "@/layouts/app-layout"
-import { BreadcrumbItem, Comment, Post } from "@/types"
+import { BreadcrumbItem, Comment, Post, SharedData } from "@/types"
 import { Head, useForm, usePage } from "@inertiajs/react"
 import { useState } from "react";
 import { AiOutlineLike, AiOutlineComment, AiOutlineShareAlt } from "react-icons/ai";
@@ -13,11 +13,11 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 
 const Show = ({ post, isLiked, likesCount, comments }: { post: Post, isLiked: boolean, likesCount: number, comments: Comment[] }) => {
-    const { post: postAction, processing, data, setData } = useForm({
+    const { post: postAction, processing, data, setData,reset } = useForm({
         comment: ""
     });
     const [isOpen, setIsOpen] = useState(false)
-    const { auth } = usePage();
+    const { auth } = usePage<SharedData>().props;
     console.log(comments)
     const handleLike = (id: string | number) => {
         if (!isLiked) {
@@ -36,12 +36,15 @@ const Show = ({ post, isLiked, likesCount, comments }: { post: Post, isLiked: bo
 
     }
 
+    console.log(auth)
+
     const handleComment = (e: React.FormEvent<HTMLFormElement>, id: number | string) => {
         e.preventDefault();
         postAction(route("post.comment", id), {
             preserveScroll: true,
             onSuccess: () => {
-                alert("Comment added successfully")
+                reset()
+                setIsOpen(false);
             }
         })
     }
@@ -62,7 +65,7 @@ const Show = ({ post, isLiked, likesCount, comments }: { post: Post, isLiked: bo
                         />
                     </div>
 
-                    <div className="lg:col-span-1 max-h-[750px] rounded-3xl p-6 text-white">
+                    <div className="lg:col-span-1 max-h-[750px] rounded-3xl p-6 text-white overflow-y-auto">
                         <div className="w-full flex justify-start items-center gap-2">
                             <div className="rounded-full flex justify-center items-center w-16 h-16 overflow-hidden border-1 hover:border-2 border-white shadow-lg">
                                 <img className="rounded-full" src={"https://tailwindcss.com/plus-assets/img/ecommerce-images/product-quick-preview-02-detail.jpg"} alt="avatar" />
@@ -119,10 +122,9 @@ const Show = ({ post, isLiked, likesCount, comments }: { post: Post, isLiked: bo
                             >{data.comment}</textarea>
                             <button type="submit" className="py-2 px-4 text-center bg-white dark:bg-neutral-100 text-blue-600 dark:text-blue-800 rounded-lg font-medium hover:bg-opacity-90 transition cursor-pointer hover:">Post</button>
                         </form>
-                        <div className="my-4 flex justify-center items-start flex-col gap-2 border-b-[1px] border-neutral-800 py-2">
+                        <div className="my-4 flex justify-center items-start flex-col gap-2 border-b-[1px] border-neutral-800  py-2">
                             {comments.map((comment: Comment) => (
                                 <div key={comment.id} className="w-full flex gap-4 p-4 border-b border-gray-200 dark:border-neutral-700">
-                                    {/* User Avatar */}
                                     <div className="flex-shrink-0">
                                         <div className="rounded-full w-10 h-10 overflow-hidden bg-gray-200 dark:bg-neutral-600">
                                             {comment.user?.avatar ? (
@@ -139,7 +141,6 @@ const Show = ({ post, isLiked, likesCount, comments }: { post: Post, isLiked: bo
                                         </div>
                                     </div>
 
-                                    {/* Comment Content */}
                                     <div className="flex-1">
                                         {/* Comment Header */}
                                         <div className="flex items-center gap-2 mb-1">
