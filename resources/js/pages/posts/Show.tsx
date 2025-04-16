@@ -1,6 +1,6 @@
 import AppLayout from "@/layouts/app-layout"
 import { BreadcrumbItem, Comment, Post, SharedData } from "@/types"
-import { Head, useForm, usePage } from "@inertiajs/react"
+import { Head, Link, useForm, usePage } from "@inertiajs/react"
 import { useState } from "react";
 import { AiOutlineLike, AiOutlineComment, AiOutlineShareAlt } from "react-icons/ai";
 
@@ -12,13 +12,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 
-const Show = ({ post, isLiked, likesCount, comments }: { post: Post, isLiked: boolean, likesCount: number, comments: Comment[] }) => {
-    const { post: postAction, processing, data, setData,reset } = useForm({
+const Show = ({ post, isLiked, likesCount, comments, posts }: { post: Post, isLiked: boolean, likesCount: number, comments: Comment[], posts: Post[] }) => {
+    const { post: postAction, processing, data, setData, reset } = useForm({
         comment: ""
     });
     const [isOpen, setIsOpen] = useState(false)
     const { auth } = usePage<SharedData>().props;
-    console.log(comments)
     const handleLike = (id: string | number) => {
         if (!isLiked) {
             postAction(route("post.like", id), {
@@ -35,7 +34,6 @@ const Show = ({ post, isLiked, likesCount, comments }: { post: Post, isLiked: bo
         }
 
     }
-
     console.log(auth)
 
     const handleComment = (e: React.FormEvent<HTMLFormElement>, id: number | string) => {
@@ -52,10 +50,16 @@ const Show = ({ post, isLiked, likesCount, comments }: { post: Post, isLiked: bo
     const openCommentBox = () => {
         setIsOpen(!isOpen)
     }
+
+    console.log(posts)
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Index" />
-            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
+            <div className="flex h-full flex-1 flex-col gap-8 rounded-xl p-4">
+                <div className="w-full flex justify-start items-center">
+                    <Link href={route("posts")} className="py-2 px-3 rounded-lg border-[1px] hover:scale-105 duration-150 transition-all border-slate-100">Go Back</Link>
+                </div>
+
                 <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-4 border-[1px] border-white rounded-3xl">
                     <div className="lg:col-span-2 max-h-[750px] rounded-3xl bg-white shadow-lg dark:bg-neutral-800 overflow-hidden">
                         <img
@@ -64,7 +68,6 @@ const Show = ({ post, isLiked, likesCount, comments }: { post: Post, isLiked: bo
                             alt="Product preview"
                         />
                     </div>
-
                     <div className="lg:col-span-1 max-h-[750px] rounded-3xl p-6 text-white overflow-y-auto">
                         <div className="w-full flex justify-start items-center gap-2">
                             <div className="rounded-full flex justify-center items-center w-16 h-16 overflow-hidden border-1 hover:border-2 border-white shadow-lg">
@@ -72,7 +75,7 @@ const Show = ({ post, isLiked, likesCount, comments }: { post: Post, isLiked: bo
                             </div>
                             <div className="w-full flex justify-center items-start flex-col">
                                 <p className="text-lg font-bold">{post.user.name}</p>
-                                <p>Software Developer</p>
+                                <p>{post.user.email}</p>
                             </div>
                         </div>
                         <div className="w-full flex justify-center items-center h-[1px] border-[1px] border-neutral-800 my-4 rounded-3xl"></div>
@@ -190,6 +193,21 @@ const Show = ({ post, isLiked, likesCount, comments }: { post: Post, isLiked: bo
                             Add to Cart
                         </button>
                     </div>
+                </div>
+                <div className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {posts.map((post: Post) => (
+                        <div
+                            key={post.id}
+                            className="flex justify-center items-center rounded-lg overflow-hidden bg-gray-100 shadow-md hover:shadow-lg transition-shadow duration-300"
+                        >
+                            <img
+                                className="w-full h-auto max-h-[300px] object-cover rounded-lg hover:scale-105 transition-transform duration-300"
+                                src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-quick-preview-02-detail.jpg"
+                                alt={`post-${post.id}`}
+                                loading="lazy"
+                            />
+                        </div>
+                    ))}
                 </div>
             </div>
         </AppLayout>

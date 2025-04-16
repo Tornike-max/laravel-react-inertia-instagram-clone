@@ -2,11 +2,11 @@ import StatComponent from '@/components/stat-comp';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { Post, SharedData, type BreadcrumbItem } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { CiSignpostDuo1 } from 'react-icons/ci';
 import { AiOutlineComment, AiOutlineLike, AiOutlineShareAlt } from "react-icons/ai";
 import { LiaUserFriendsSolid } from "react-icons/lia";
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import ModalComponent from '@/components/modal';
 
 
@@ -22,9 +22,15 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Index({posts}:{posts:Post[]}) {
     const { auth } = usePage<SharedData>().props;
     const [open, setOpen] = useState(false);
+    const {post,processing,setData} = useForm({});
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     
+
+    const handleSubmit = (e: FormEvent<HTMLFormElement>,id:number)=>{
+        e.preventDefault();
+        post(route("post.like",id));
+    };
 
     console.log(posts,auth)
     return (
@@ -77,10 +83,10 @@ export default function Index({posts}:{posts:Post[]}) {
                     {posts.length > 0 ? (
                         <div className="grid grid-cols-1 gap-6 p-4 md:gap-8"> {/* Increased gap */}
                             {posts.map((post) => (
+                                <div className='                                    className="bg-white dark:bg-neutral-900 rounded-xl shadow-md overflow-hidden transition-all hover:shadow-lg" 
+'>
                                 <Link href={route('post.show', post.id)}
-                                    key={post.id} 
-                                    className="bg-white dark:bg-neutral-900 rounded-xl shadow-md overflow-hidden transition-all hover:shadow-lg" 
-                                >
+                                    key={post.id}>
                                     {/* Post Header */}
                                     <div className="flex items-center p-4 border-b border-neutral-100 dark:border-neutral-800"> 
                                         <img 
@@ -114,8 +120,10 @@ export default function Index({posts}:{posts:Post[]}) {
                                         </div>
                                     )}
 
-                                    {/* Post Stats */}
-                                    <div className="px-4 py-2 border-t border-neutral-100 dark:border-neutral-800 text-sm text-gray-500 dark:text-neutral-400">
+                                    
+                                </Link>
+                                {/* Post Stats */}
+                                <div className="px-4 py-2 border-t border-neutral-100 dark:border-neutral-800 text-sm text-gray-500 dark:text-neutral-400">
                                         <div className="flex items-center gap-6">
                                             <span>10 likes</span>
                                             <span>5 comments</span>
@@ -123,19 +131,19 @@ export default function Index({posts}:{posts:Post[]}) {
                                         </div>
                                     </div>
 
-                                    {/* Action Buttons */}
-                                    <div className="flex border-t border-neutral-100 dark:border-neutral-800 text-gray-500 dark:text-neutral-400 text-sm font-medium divide-x divide-neutral-100 dark:divide-neutral-800"> {/* Added dividers */}
-                                        <button type='button' className="flex-1 flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
-                                            <AiOutlineLike className="mr-2" /> Like
+                                {/* Action Buttons */}
+                                <form onSubmit={(e)=>handleSubmit(e,post.id)} className="flex border-t border-neutral-100 dark:border-neutral-800 text-gray-500 dark:text-neutral-400 text-sm font-medium divide-x divide-neutral-100 dark:divide-neutral-800"> {/* Added dividers */}
+                                        <button type='submit' className="flex-1 cursor-pointer flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
+                                            <AiOutlineLike className="mr-2" /> {processing && "Wait"} Like
                                         </button>
-                                        <button type='button' className="flex-1 flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
+                                        <button onClick={()=>{console.log('second')}} type='button' className="flex-1 cursor-pointer flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
                                             <AiOutlineComment className="mr-2" /> Comment
                                         </button>
-                                        <button type='button' className="flex-1 flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
+                                        <button onClick={()=>{console.log('third')}} type='button' className="flex-1 cursor-pointer flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
                                             <AiOutlineShareAlt className="mr-2" /> Share
                                         </button>
-                                    </div>
-                                </Link>
+                                    </form>
+                                </div>
                             ))}
                         </div>
                     ) : (

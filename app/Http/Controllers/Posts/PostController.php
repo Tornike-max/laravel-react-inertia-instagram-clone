@@ -14,6 +14,8 @@ class PostController extends Controller
     public function index(){
         $posts = Post::query()->with('user')->orderBy('created_at','desc')->get();
         
+        // $isLiked = $this->isLiked($post);
+
         return inertia('posts/Index',[
             'posts'=>$posts
         ]);
@@ -46,11 +48,14 @@ class PostController extends Controller
         $isLiked = $this->isLiked($post);
         $likesCount = $post->likes()->count();
         $comments = Comment::query()->with("post",'user')->where('post_id','=',$post->id)->orderBy('created_at','desc')->get();
+        $posts = Post::query()->with("user")->orderBy('created_at','desc')->get();
+
         return inertia("posts/Show",[
             'post'=>$postData,
             "isLiked"=>$isLiked,
             "likesCount"=>$likesCount,
-            "comments"=>$comments
+            "comments"=>$comments,
+            "posts"=>$posts
         ]);
     }
 
@@ -58,7 +63,6 @@ class PostController extends Controller
     {
         $user = Auth::user();
 
-       
         if (!$user->likes()->where('post_id', $post->id)->exists()) {
             $user->likes()->attach($post->id);
         }
