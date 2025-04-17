@@ -34,7 +34,6 @@ const Show = ({ post, isLiked, likesCount, comments, posts }: { post: Post, isLi
         }
 
     }
-    console.log(auth)
 
     const handleComment = (e: React.FormEvent<HTMLFormElement>, id: number | string) => {
         e.preventDefault();
@@ -51,7 +50,6 @@ const Show = ({ post, isLiked, likesCount, comments, posts }: { post: Post, isLi
         setIsOpen(!isOpen)
     }
 
-    console.log(posts)
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Index" />

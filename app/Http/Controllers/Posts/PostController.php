@@ -12,12 +12,20 @@ use Illuminate\Support\Str;
 class PostController extends Controller
 {
     public function index(){
-        $posts = Post::query()->with('user')->orderBy('created_at','desc')->get();
-        
-        // $isLiked = $this->isLiked($post);
+        $posts = Post::query()->with('user','likes')->orderBy('created_at','desc')->get();
 
+        foreach ($posts as $post) {
+            $post->likesCount = $post->likes->count();
+        }
+
+        
+        foreach ($posts as $post) {
+            foreach ($post->likes as $like) {
+                $like->liked = $like->pivot->user_id === Auth::user()->id;
+            }
+        }
         return inertia('posts/Index',[
-            'posts'=>$posts
+            'posts'=>$posts,
         ]);
     }
 
@@ -31,7 +39,7 @@ class PostController extends Controller
             $data['slug'] = Str::slug($data['title']);
         }
 
-        dd($data);
+        
 
         Post::create([
             'title'=>$data['title'],
@@ -63,9 +71,18 @@ class PostController extends Controller
     {
         $user = Auth::user();
 
+        $isLiked = $this->isLiked($post);
+
+        if($isLiked){
+            return $this->unlike($post);
+        }
+
         if (!$user->likes()->where('post_id', $post->id)->exists()) {
             $user->likes()->attach($post->id);
         }
+
+        return redirect()->route('posts');
+
     }
 
     /**
@@ -74,6 +91,12 @@ class PostController extends Controller
     public function unlike(Post $post)
     {
         $user = Auth::user();
+
+        $isLiked = $this->isLiked($post);
+
+        if(!$isLiked){
+            return $this->like($post);
+        }
 
         if ($user->likes()->where('post_id', $post->id)->exists()) {
             $user->likes()->detach($post->id);

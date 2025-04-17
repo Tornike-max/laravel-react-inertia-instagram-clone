@@ -1,12 +1,12 @@
 import StatComponent from '@/components/stat-comp';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
-import { Post, SharedData, type BreadcrumbItem } from '@/types';
+import { Post, SharedData, User, type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { CiSignpostDuo1 } from 'react-icons/ci';
 import { AiOutlineComment, AiOutlineLike, AiOutlineShareAlt } from "react-icons/ai";
 import { LiaUserFriendsSolid } from "react-icons/lia";
-import { FormEvent, useState } from 'react';
+import {   useState } from 'react';
 import ModalComponent from '@/components/modal';
 
 
@@ -22,17 +22,22 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Index({posts}:{posts:Post[]}) {
     const { auth } = usePage<SharedData>().props;
     const [open, setOpen] = useState(false);
-    const {post,processing,setData} = useForm({});
+    const {post,processing} = useForm({});
+
+    
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    // console.log();
     
-
-    const handleSubmit = (e: FormEvent<HTMLFormElement>,id:number)=>{
-        e.preventDefault();
-        post(route("post.like",id));
+    
+    const handleLike = (id:number)=>{
+        post(route("post.like", id), {
+                preserveScroll: true,
+                onSuccess: () => {
+                }
+        });
     };
 
-    console.log(posts,auth)
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Index" />
@@ -132,8 +137,12 @@ export default function Index({posts}:{posts:Post[]}) {
                                     </div>
 
                                 {/* Action Buttons */}
-                                <form onSubmit={(e)=>handleSubmit(e,post.id)} className="flex border-t border-neutral-100 dark:border-neutral-800 text-gray-500 dark:text-neutral-400 text-sm font-medium divide-x divide-neutral-100 dark:divide-neutral-800"> {/* Added dividers */}
+                                <form onSubmit={(e) => {
+                                    e.preventDefault();
+                                    handleLike(post.id);
+                                }} className="flex border-t border-neutral-100 dark:border-neutral-800 text-gray-500 dark:text-neutral-400 text-sm font-medium divide-x divide-neutral-100 dark:divide-neutral-800"> {/* Added dividers */}
                                         <button type='submit' className="flex-1 cursor-pointer flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
+                                            
                                             <AiOutlineLike className="mr-2" /> {processing && "Wait"} Like
                                         </button>
                                         <button onClick={()=>{console.log('second')}} type='button' className="flex-1 cursor-pointer flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
