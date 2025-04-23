@@ -31,6 +31,11 @@ export interface SharedData {
 }
 
 export interface Post{
+    data:{
+        likes: Array;
+    comments:Array;
+    likesCount: number;
+    commentsCount: number;
     id: number;
     title: string;
     content: string;
@@ -41,6 +46,8 @@ export interface Post{
     published_at: string;
     created_at: string;
     updated_at: string;
+    }
+    
 }
 
 export interface Comment {

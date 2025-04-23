@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Posts;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PostResource;
 use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -12,20 +13,25 @@ use Illuminate\Support\Str;
 class PostController extends Controller
 {
     public function index(){
-        $posts = Post::query()->with('user','likes')->orderBy('created_at','desc')->get();
+        $posts = Post::query()->with('user', 'comments', 'likes')->orderBy('created_at','desc')->get();
 
         foreach ($posts as $post) {
             $post->likesCount = $post->likes->count();
         }
 
-        
         foreach ($posts as $post) {
-            foreach ($post->likes as $like) {
-                $like->liked = $like->pivot->user_id === Auth::user()->id;
-            }
+            $post->commentsCount = $post->comments->count();
         }
+
+        
+        // foreach ($posts as $post) {
+        //     foreach ($post->likes as $like) {
+        //         $like->liked = $like->pivot->user_id === Auth::user()->id ? $like->pivot->user_id : null;
+        //     }
+        // }
+
         return inertia('posts/Index',[
-            'posts'=>$posts,
+            'posts'=>PostResource::collection($posts)
         ]);
     }
 
