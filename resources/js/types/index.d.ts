@@ -42,6 +42,7 @@ export interface SharedData {
     user_id: number;
     likes: Like[];
     comments: Comment[];
+    user: User;
     commentsCount: number;
     likesCount: number;
     published: number;

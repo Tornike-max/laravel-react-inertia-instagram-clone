@@ -23,6 +23,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Index({ posts }: { posts: Post }) {
     const { auth } = usePage<SharedData>().props;
     const [open, setOpen] = useState(false);
+    const [shareOpen, setShareOpen] = useState(false);
     const { post, processing } = useForm({});
     const [activeCommentsPostId, setActiveCommentsPostId] = useState<number | null>(null);
 
@@ -101,12 +102,12 @@ export default function Index({ posts }: { posts: Post }) {
                                         <div className="flex items-center p-4 border-b border-neutral-100 dark:border-neutral-800">
                                             <img
                                                 src={"https://tailwindcss.com/plus-assets/img/ecommerce-images/product-quick-preview-02-detail.jpg"}
-                                                // alt={post.user.name}
+                                                alt={post.user.name}
                                                 className="w-10 h-10 rounded-full mr-3 border-2 border-indigo-500"
                                             />
                                             <div>
                                                 <div className="font-semibold text-gray-900 dark:text-neutral-100">
-                                                    {/* {post?.user?.name} */}hello
+                                                    {post?.user?.name}
                                                 </div>
                                                 <div className="text-xs text-gray-500 dark:text-neutral-400">
                                                     {new Date(post?.created_at).toLocaleString()}

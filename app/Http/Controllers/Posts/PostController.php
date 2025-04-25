@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 class PostController extends Controller
 {
     public function index(){
-        $posts = Post::query()->with('user', 'comments', 'likes')->orderBy('created_at','desc')->get();
+        $posts = Post::query()->with('user', 'comments', 'likes','sharedPosts')->orderBy('created_at','desc')->get();
 
         foreach ($posts as $post) {
             $post->likesCount = $post->likes->count();
@@ -23,6 +23,7 @@ class PostController extends Controller
             $post->commentsCount = $post->comments->count();
         }
 
+        // dd($posts);
         
         // foreach ($posts as $post) {
         //     foreach ($post->likes as $like) {
@@ -130,6 +131,29 @@ class PostController extends Controller
             'user_id'=>Auth::user()->id,
             "post_id"=>$post->id,
             'comment'=>$data['comment']
+        ]);
+
+        return redirect()->back();
+    }
+
+    public function sharePost(Request $request,Post $post){
+
+        $data = $request->validate([
+            'post_id'=>'required'
+        ]);
+
+        $user = Auth::user();
+
+        dd($data);
+
+        if($user->sharedPosts()->where('post_id', $data['post_id'])->exists()){
+            return redirect()->back();
+        }
+
+        $user->sharedPosts()->create([
+            'post_id'=>$post->id,
+            'user_id'=>$user->id,
+            'shared_at'=>now()
         ]);
 
         return redirect()->back();

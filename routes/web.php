@@ -22,6 +22,7 @@ Route::get('/posts/{post}/is-liked', [PostController::class, 'isLiked'])->name("
 //comments
 Route::post('/post/{post}/comment', [PostController::class, 'comment'])->name("post.comment");
 Route::delete('/post/delete/{post}', [PostController::class, 'destroyComment'])->name("post.destroy.comment");
+Route::post('/post/{post}/share', [PostController::class, 'sharePost'])->name("post.share");
 
 
 require __DIR__.'/settings.php';
