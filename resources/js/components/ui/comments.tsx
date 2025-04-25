@@ -1,8 +1,8 @@
-import { Post } from '@/types'
+import {  Comment, PostItem } from '@/types'
 import { useForm } from '@inertiajs/react'
 import React from 'react'
 
-const Comments = ({ post }: { post: Post }) => {
+const Comments = ({ post }: { post: PostItem }) => {
     const { setData, processing, data, post: postReq } = useForm({
         comment: ''
     })
@@ -49,8 +49,8 @@ const Comments = ({ post }: { post: Post }) => {
 
             {/* Comment List */}
             {post.comments.length > 0 ? (
-                <div className="flex flex-col gap-4 h-[400px] overflow-y-auto">
-                    {post.comments.map((comment: unknown) => (
+                <div  className="flex flex-col gap-4 h-[400px] overflow-y-auto">
+                    {post.comments.map((comment: Comment) => (
                         <div key={comment.id} className="flex gap-3 items-start">
                             <div className="w-9 h-9 rounded-full bg-neutral-300 dark:bg-neutral-700 shrink-0" />
                             

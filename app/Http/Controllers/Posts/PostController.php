@@ -30,6 +30,7 @@ class PostController extends Controller
         //     }
         // }
 
+        // dd(PostResource::collection($posts));
         return inertia('posts/Index',[
             'posts'=>PostResource::collection($posts)
         ]);

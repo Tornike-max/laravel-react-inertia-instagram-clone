@@ -30,25 +30,39 @@ export interface SharedData {
     [key: string]: unknown;
 }
 
-export interface Post{
-    data:{
-        likes: Array;
-    comments:Array;
-    likesCount: number;
-    commentsCount: number;
+
+  
+  
+  export interface PostItem {
     id: number;
     title: string;
     content: string;
-    user_id: number;
-    user:User;
-    slug: string;
     image: string;
+    slug: string;
+    user_id: number;
+    likes: Like[];
+    comments: Comment[];
+    commentsCount: number;
+    likesCount: number;
+    published: number;
     published_at: string;
+    updated_at: string;
+    created_at: string;
+  }
+  
+  export interface Post {
+    data: PostItem[];
+  }
+
+  export interface Like{
+    post_id: number;
+    user_id: number;
     created_at: string;
     updated_at: string;
-    }
-    
-}
+    id: number;
+  }
+  
+  
 
 export interface Comment {
     id: number;

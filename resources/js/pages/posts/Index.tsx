@@ -1,7 +1,7 @@
 import StatComponent from '@/components/stat-comp';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
-import { Post, SharedData, type BreadcrumbItem } from '@/types';
+import { Post, PostItem, SharedData, type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { CiSignpostDuo1 } from 'react-icons/ci';
 import { AiOutlineComment, AiOutlineLike, AiOutlineShareAlt } from "react-icons/ai";
@@ -20,7 +20,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 
 
-export default function Index({ posts }: { posts: Post[] }) {
+export default function Index({ posts }: { posts: Post }) {
     const { auth } = usePage<SharedData>().props;
     const [open, setOpen] = useState(false);
     const { post, processing } = useForm({});
@@ -32,7 +32,6 @@ export default function Index({ posts }: { posts: Post[] }) {
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    console.log(posts.data);
 
 
     const handleLike = (id: number) => {
@@ -42,6 +41,8 @@ export default function Index({ posts }: { posts: Post[] }) {
             }
         });
     };
+
+    console.log(posts)
     
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -49,9 +50,9 @@ export default function Index({ posts }: { posts: Post[] }) {
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                     <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
-                        {posts.data.length > 0
+                        {posts?.data.length > 0
                             ?
-                            <StatComponent count={posts.data.length} title='Posts' url='/posts'>
+                            <StatComponent count={posts?.data.length} title='Posts' url='/posts'>
                                 <CiSignpostDuo1 className="text-3xl text-neutral-900 dark:text-neutral-100" />
                             </StatComponent>
                             :
@@ -59,18 +60,18 @@ export default function Index({ posts }: { posts: Post[] }) {
                         }
                     </div>
                     <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
-                        {posts.data.length > 0
+                        {posts?.data?.length > 0
                             ?
-                            <StatComponent count={posts.data.length} title='Likes' url='/likes'>
+                            <StatComponent count={posts?.data?.length} title='Likes' url='/likes'>
                                 <AiOutlineLike className="text-3xl text-neutral-900 dark:text-neutral-100" />
                             </StatComponent>
                             :
                             <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
                         }                    </div>
                     <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
-                        {posts.data.length > 0
+                        {posts?.data?.length > 0
                             ?
-                            <StatComponent count={posts.data.length} title='Friends' url='/friends'>
+                            <StatComponent count={posts?.data?.length} title='Friends' url='/friends'>
                                 <LiaUserFriendsSolid className="text-3xl text-neutral-900 dark:text-neutral-100" />
                             </StatComponent>
                             :
@@ -90,51 +91,51 @@ export default function Index({ posts }: { posts: Post[] }) {
                     <ModalComponent open={open} handleClose={handleClose} />
                 </div>
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border md:min-h-min">
-                    {posts.data.length > 0 ? (
+                    {posts?.data?.length > 0 ? (
                         <div className="grid grid-cols-1 gap-6 p-4 md:gap-8"> {/* Increased gap */}
-                            {posts.data.map((post: Post) => (
-                                <div className='bg-white dark:bg-neutral-900 rounded-xl shadow-md overflow-hidden transition-all hover:shadow-lg '>
-                                    <Link href={route('post.show', post.id)}
-                                        key={post.id}>
+                            {posts?.data?.map((post: PostItem) => (
+                                <div key={post.id} className='bg-white dark:bg-neutral-900 rounded-xl shadow-md overflow-hidden transition-all hover:shadow-lg '>
+                                    <Link href={route('post.show', post?.id)}
+                                        key={post?.id}>
                                         {/* Post Header */}
                                         <div className="flex items-center p-4 border-b border-neutral-100 dark:border-neutral-800">
                                             <img
                                                 src={"https://tailwindcss.com/plus-assets/img/ecommerce-images/product-quick-preview-02-detail.jpg"}
-                                                alt={post.user.name}
+                                                // alt={post.user.name}
                                                 className="w-10 h-10 rounded-full mr-3 border-2 border-indigo-500"
                                             />
                                             <div>
                                                 <div className="font-semibold text-gray-900 dark:text-neutral-100">
-                                                    {post.user.name}
+                                                    {/* {post?.user?.name} */}hello
                                                 </div>
                                                 <div className="text-xs text-gray-500 dark:text-neutral-400">
-                                                    {new Date(post.created_at).toLocaleString()}
+                                                    {new Date(post?.created_at).toLocaleString()}
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div className="p-4">
                                             <p className="text-gray-800 dark:text-neutral-200 mb-4 whitespace-pre-line">
-                                                {post.content}
+                                                {post?.content}
                                             </p>
                                         </div>
 
-                                        {post.image && (
+                                        {/* {post?.image && ( */}
                                             <div className="border-y border-neutral-100 dark:border-neutral-800">
                                                 <img
                                                     src={"https://tailwindcss.com/plus-assets/img/ecommerce-images/product-quick-preview-02-detail.jpg"}
-                                                    alt={post.title}
+                                                    alt={post?.title}
                                                     className="w-full max-h-[600px] object-cover"
                                                 />
                                             </div>
-                                        )}
+                                        {/* )} */}
 
 
                                     </Link>
                                     {/* Post Stats */}
                                     <div className="px-4 py-2 border-t border-neutral-100 dark:border-neutral-800 text-sm text-gray-500 dark:text-neutral-400">
                                         <div className="flex items-center gap-6">
-                                            <span>{post.likesCount} likes</span>
+                                            <span>{post?.likesCount} likes</span>
                                             <span>5 comments</span>
                                             <span>2 shares</span>
                                         </div>
@@ -143,23 +144,19 @@ export default function Index({ posts }: { posts: Post[] }) {
                                     {/* Action Buttons */}
                                     <form onSubmit={(e) => {
                                         e.preventDefault();
-                                        handleLike(post.id);
+                                        handleLike(post?.id);
                                     }} className="flex border-t border-neutral-100 dark:border-neutral-800 text-gray-500 dark:text-neutral-400 text-sm font-medium divide-x divide-neutral-100 dark:divide-neutral-800"> {/* Added dividers */}
                                         <button type='submit' className="flex-1 cursor-pointer flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
-                                            <AiOutlineLike className="mr-2" /> {post.likes.some((like: {
-                                                pivot: {
-                                                    user_id: number; post_id: number;
-                                                };
-                                            }) => like.pivot.post_id === post.id && like.pivot.user_id === auth.user.id) ? processing ? "Wait" : "Unlike" : processing ? "Wait" : "Like"}
+                                            <AiOutlineLike className="mr-2" /> {post.likes.some((like) => like.post_id === post?.id && like.user_id === auth.user.id) ? processing ? "Wait" : "Unlike" : processing ? "Wait" : "Like"}
                                         </button>
-                                        <button onClick={() => toggleComments(post.id)} type='button' className="flex-1 cursor-pointer flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
+                                        <button onClick={() => toggleComments(post?.id)} type='button' className="flex-1 cursor-pointer flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
                                             <AiOutlineComment className="mr-2" /> Comment
                                         </button>
                                         <button onClick={() => { console.log('third') }} type='button' className="flex-1 cursor-pointer flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
                                             <AiOutlineShareAlt className="mr-2" /> Share
                                         </button>
                                     </form>
-                                    {activeCommentsPostId === post.id && (
+                                    {activeCommentsPostId === post?.id && (
                                         <Comments post={post}  />
                                     )}
                                 </div>
