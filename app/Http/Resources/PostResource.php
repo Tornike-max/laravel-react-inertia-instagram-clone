@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class PostResource extends JsonResource
 {
@@ -29,7 +30,8 @@ class PostResource extends JsonResource
             'likesCount' => $this->likes->count(),
             'commentsCount' => $this->comments->count(),
             'comments' => CommentResource::collection($this->whenLoaded('comments')),
-            'likes' => LikeResource::collection($this->whenLoaded('likes')),
+            // 'likes' => LikeResource::collection($this->whenLoaded('likes')),
+            'likes'=> $this->whenLoaded("likes")
         ];
     }
 }

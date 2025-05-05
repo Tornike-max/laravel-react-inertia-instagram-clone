@@ -23,7 +23,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Index({ posts }: { posts: Post }) {
     const { auth } = usePage<SharedData>().props;
     const [open, setOpen] = useState(false);
-    const [shareOpen, setShareOpen] = useState(false);
     const { post, processing } = useForm({});
     const [activeCommentsPostId, setActiveCommentsPostId] = useState<number | null>(null);
 
@@ -43,8 +42,7 @@ export default function Index({ posts }: { posts: Post }) {
         });
     };
 
-    console.log(posts)
-    
+    console.log(posts?.data.map((post: PostItem) => post?.likes.map((like) => like.pivot.user_id === 2)));
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Index" />
@@ -148,6 +146,7 @@ export default function Index({ posts }: { posts: Post }) {
                                         handleLike(post?.id);
                                     }} className="flex border-t border-neutral-100 dark:border-neutral-800 text-gray-500 dark:text-neutral-400 text-sm font-medium divide-x divide-neutral-100 dark:divide-neutral-800"> {/* Added dividers */}
                                         <button type='submit' className="flex-1 cursor-pointer flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
+                                            {/* {posts?.data.map((allPost: PostItem) => allPost?.likes.map((like) => like.pivot.user_id === post.user_id))} */}
                                             <AiOutlineLike className="mr-2" /> {post.likes.some((like) => like.post_id === post?.id && like.user_id === auth.user.id) ? processing ? "Wait" : "Unlike" : processing ? "Wait" : "Like"}
                                         </button>
                                         <button onClick={() => toggleComments(post?.id)} type='button' className="flex-1 cursor-pointer flex items-center justify-center py-3 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">

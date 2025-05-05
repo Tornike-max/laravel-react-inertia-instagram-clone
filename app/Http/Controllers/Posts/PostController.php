@@ -15,22 +15,6 @@ class PostController extends Controller
     public function index(){
         $posts = Post::query()->with('user', 'comments', 'likes','sharedPosts')->orderBy('created_at','desc')->get();
 
-        foreach ($posts as $post) {
-            $post->likesCount = $post->likes->count();
-        }
-
-        foreach ($posts as $post) {
-            $post->commentsCount = $post->comments->count();
-        }
-
-        // dd($posts);
-        
-        // foreach ($posts as $post) {
-        //     foreach ($post->likes as $like) {
-        //         $like->liked = $like->pivot->user_id === Auth::user()->id ? $like->pivot->user_id : null;
-        //     }
-        // }
-
         // dd(PostResource::collection($posts));
         return inertia('posts/Index',[
             'posts'=>PostResource::collection($posts)
@@ -46,8 +30,6 @@ class PostController extends Controller
         if($data['title'] !== null){
             $data['slug'] = Str::slug($data['title']);
         }
-
-        
 
         Post::create([
             'title'=>$data['title'],
